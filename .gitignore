@@ -61,6 +61,6 @@ typings/
 .next
 
 #project file
-.idea
+.idea/
 
 package-lock.json
