@@ -6,16 +6,17 @@
     "start": "node --harmony app"
   },
   "dependencies": {
+    "body-parser": "~1.13.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-auto-routes": "^2.2.0",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "less-middleware": "~2.2.1",
-    "morgan": "~1.9.0",
-    "body-parser": "~1.13.2",
-    "express-auto-routes": "^2.2.0",
     "lodash": "^4.13.1",
+    "mongoose": "^5.2.9",
+    "morgan": "~1.9.0",
     "node-uuid": "^1.4.7"
   }
 }
