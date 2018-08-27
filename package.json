@@ -8,6 +8,7 @@
   "dependencies": {
     "body-parser": "~1.13.2",
     "cookie-parser": "~1.4.3",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "express-auto-routes": "^2.2.0",
