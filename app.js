@@ -14,14 +14,21 @@ var simpleUserSession = require('./middlewares/simpleUserSession');
 var mongoose = require('mongoose');
 var config = require('./config');
 
-var indexRouter = require('./routes/index');
-var testRouter = require('./routes/test');
-var usersRouter = require('./routes/users');
-
 var app = express();
 
 // init database
-global.db = mongoose.createConnection(config.db);
+// global.db = mongoose.createConnection(config.db);
+function dbConnect() {
+	var options = { server: { socketOptions: { keepAlive: 1 } } };
+	return mongoose.createConnection(config.db);
+}
+global.db = dbConnect()
+	.on('error', console.log)
+	.on('disconnected', dbConnect);
+
+var indexRouter = require('./routes/index');
+var testRouter = require('./routes/test');
+var usersRouter = require('./routes/users');
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -94,3 +101,19 @@ if (!module.parent) {
 } else {
 	module.exports = app;
 }
+
+// connect()
+// 	.on('error', console.log)
+// 	.on('disconnected', connect)
+// 	.once('open', listen);
+//
+// function listen () {
+// 	if (app.get('env') === 'test') return;
+// 	app.listen(port);
+// 	console.log('Express app started on port ' + port);
+// }
+//
+// function connect () {
+// 	var options = { server: { socketOptions: { keepAlive: 1 } } };
+// 	return mongoose.connect(config.db, options).connection;
+// }
