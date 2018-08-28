@@ -16,11 +16,11 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
 	name: { type: String, default: '' },
 	email: { type: String, default: '' },
-	username: { type: String, default: '' },
-	provider: { type: String, default: '' },
-	hashed_password: { type: String, default: '' },
-	salt: { type: String, default: '' },
-	authToken: { type: String, default: '' },
+	// username: { type: String, default: '' },
+	// provider: { type: String, default: '' },
+	// hashed_password: { type: String, default: '' },
+	// salt: { type: String, default: '' },
+	// authToken: { type: String, default: '' },
 });
 
 const validatePresenceOf = value => value && value.length;
@@ -46,37 +46,37 @@ UserSchema
 
 // the below 5 validations only apply if you are signing up traditionally
 
-UserSchema.path('name').validate(function (name) {
-	if (this.skipValidation()) return true;
-	return name.length;
-}, 'Name cannot be blank');
-
-UserSchema.path('email').validate(function (email) {
-	if (this.skipValidation()) return true;
-	return email.length;
-}, 'Email cannot be blank');
-
-UserSchema.path('email').validate(function (email, fn) {
-	const User = mongoose.model('User');
-	if (this.skipValidation()) fn(true);
-
-	// Check only when it is a new user or when email field is modified
-	if (this.isNew || this.isModified('email')) {
-		User.find({ email: email }).exec(function (err, users) {
-			fn(!err && users.length === 0);
-		});
-	} else fn(true);
-}, 'Email already exists');
-
-UserSchema.path('username').validate(function (username) {
-	if (this.skipValidation()) return true;
-	return username.length;
-}, 'Username cannot be blank');
-
-UserSchema.path('hashed_password').validate(function (hashed_password) {
-	if (this.skipValidation()) return true;
-	return hashed_password.length && this._password.length;
-}, 'Password cannot be blank');
+// UserSchema.path('name').validate(function (name) {
+// 	if (this.skipValidation()) return true;
+// 	return name.length;
+// }, 'Name cannot be blank');
+//
+// UserSchema.path('email').validate(function (email) {
+// 	if (this.skipValidation()) return true;
+// 	return email.length;
+// }, 'Email cannot be blank');
+//
+// UserSchema.path('email').validate(function (email, fn) {
+// 	const User = mongoose.model('User');
+// 	if (this.skipValidation()) fn(true);
+//
+// 	// Check only when it is a new user or when email field is modified
+// 	if (this.isNew || this.isModified('email')) {
+// 		User.find({ email: email }).exec(function (err, users) {
+// 			fn(!err && users.length === 0);
+// 		});
+// 	} else fn(true);
+// }, 'Email already exists');
+//
+// UserSchema.path('username').validate(function (username) {
+// 	if (this.skipValidation()) return true;
+// 	return username.length;
+// }, 'Username cannot be blank');
+//
+// UserSchema.path('hashed_password').validate(function (hashed_password) {
+// 	if (this.skipValidation()) return true;
+// 	return hashed_password.length && this._password.length;
+// }, 'Password cannot be blank');
 
 
 /**
@@ -141,14 +141,6 @@ UserSchema.methods = {
 			return '';
 		}
 	}
-
-	/**
-	 * Validation is not required if using OAuth
-	 */
-
-	// skipValidation: function () {
-	// 	return ~oAuthTypes.indexOf(this.provider);
-	// }
 };
 
 /**
@@ -166,11 +158,36 @@ UserSchema.statics = {
 	 */
 
 	load: function (options, cb) {
-		options.select = options.select || 'name username';
+		options.select = options.select || 'name email';
 		return this.findOne(options.criteria)
 			.select(options.select)
+			.exec(cb);
+	},
+	/**
+	 * Load
+	 *
+	 * @param {Object} options
+	 * @param {Function} cb
+	 * @api private
+	 */
+
+	loadByName: function (options, cb) {
+		// options.select = options.select || 'name email';
+		return this.findOne({name: options})
+			// .select(options.select)
 			.exec(cb);
 	}
 };
 
-mongoose.model('User', UserSchema);
+
+// 译者注：注意了， method 是给 document 用的
+// NOTE: methods must be added to the schema before compiling it with mongoose.model()
+// kittySchema.methods.speak = function () {
+// 	var greeting = this.name
+// 		? "Meow name is " + this.name
+// 		: "I don't have a name";
+// 	console.log(greeting);
+// }
+
+
+module.exports = global.db.model('user', UserSchema);
