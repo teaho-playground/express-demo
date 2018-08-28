@@ -4,7 +4,7 @@ var userService = require('../../services/userService'),
 // POST /login
 exports.post = {
   url: '/login', // override default /user/login
-  middlewares: forbidden,
+  // middlewares: forbidden,
   handler: function (req, res, next) {
     var username = req.body.username.trim();
     

@@ -8,13 +8,6 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const Schema = mongoose.Schema;
-const oAuthTypes = [
-	'github',
-	'twitter',
-	'facebook',
-	'google',
-	'linkedin'
-];
 
 /**
  * User Schema
@@ -147,15 +140,15 @@ UserSchema.methods = {
 		} catch (err) {
 			return '';
 		}
-	},
+	}
 
 	/**
 	 * Validation is not required if using OAuth
 	 */
 
-	skipValidation: function () {
-		return ~oAuthTypes.indexOf(this.provider);
-	}
+	// skipValidation: function () {
+	// 	return ~oAuthTypes.indexOf(this.provider);
+	// }
 };
 
 /**
