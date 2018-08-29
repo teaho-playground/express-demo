@@ -32,8 +32,6 @@ router.post('/user/login', function(req, res, next) {
 	// res.send('respond a');
 	console.log(req.body)
 	const user = req.body;
-	const session = req.session;
-	console.log(session);
 	User.loadByName(user.name, function (err, rs) {
 		if (err) return next(err);
 		if(_.isEmpty(rs)) {
@@ -41,8 +39,15 @@ router.post('/user/login', function(req, res, next) {
 			res.json({status: 0, msg: "登录失败!"});
 			return;
 		}
+		req.session.user = rs;
+		req.session.save();
 		res.json({status: 1, msg: "登录成功!", data: rs});
 	});
+});
+
+router.post('/user/logout', function(req, res, next) {
+	req.session.destroy();
+	res.json({status: 1, msg: "登出成功!"});
 });
 
 module.exports = router;

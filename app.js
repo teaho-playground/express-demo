@@ -33,7 +33,7 @@ global.db = dbConnect()
 app.use(session({
 	secret: '123456',
 	name: 'testapp',
-	cookie: {maxAge: 80000 },
+	cookie: {maxAge: 3600*1000 },
 	resave: false,
 	saveUninitialized: true,
 	store: new MongoStore({   //配置mongodb
