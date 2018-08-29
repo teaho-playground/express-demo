@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
 	const url = req.url;
 	if(!req.session.user) {
 		if (!excludePaths.find((elem) => elem===url )) {
-			res.json({status: 403, msg: "用户未登录"});
+			res.json({status: 401, msg: "用户未登录"});
 			return;
 		}
 	}

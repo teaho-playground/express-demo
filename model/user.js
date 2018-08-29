@@ -84,13 +84,9 @@ UserSchema
  */
 
 UserSchema.pre('save', function (next) {
-	if (!this.isNew) return next();
-
-	if (!validatePresenceOf(this.password) && !this.skipValidation()) {
-		next(new Error('Invalid password'));
-	} else {
-		next();
-	}
+	//could do some validation or psw encrypt
+	console.log("presaving user!!");
+	next();
 });
 
 /**

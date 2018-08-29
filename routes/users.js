@@ -45,6 +45,33 @@ router.post('/user/login', function(req, res, next) {
 	});
 });
 
+router.post('/user/register', function(req, res, next) {
+	// res.send('respond a');
+	console.log(req.body)
+	const user = req.body;
+	User.loadByName(user.name, function (err, rs) {
+		if (err) return next(err);
+		if(!_.isEmpty(rs)) {
+			console.info("[INFO] user doesn't exist!!");
+			res.json({status: 0, msg: "已存在用户!"});
+			return;
+		}
+
+		if (_.isEmpty(user.name)) return next({message: "用户名不能为空!"});
+		console.log(user);
+		var UserEntity = new User({name: user.name});
+		UserEntity.save(function (err, rs) {
+			if (err) {
+				console.error(err);
+			} else {
+				req.session.user = rs;
+				req.session.save();
+				res.json({status: 1, msg: "注册成功!", data: rs});
+			}
+		});
+	});
+});
+
 router.post('/user/logout', function(req, res, next) {
 	req.session.destroy();
 	res.json({status: 1, msg: "登出成功!"});
