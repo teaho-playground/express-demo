@@ -1,4 +1,5 @@
 var express = require('express');
+var _ = require('lodash');
 var router = express.Router();
 var User = require('../model/user');
 
@@ -8,9 +9,7 @@ router.get('/users', function(req, res, next) {
 	// find(Conditions,field,callback);
 	//	User.find({},{name:1, email:1, _id:0}, function(err,docs){
 	User.find({}, function(err,docs){
-		//docs result set
-		console.debug(docs);
-		res.json(docs);
+		res.json({status: 1, msg: "", data: docs})
 	})
 });
 
@@ -18,7 +17,7 @@ router.get('/user/:name', function (req, res, next) {
 	// res.send('respond a');
 	const user = User.loadByName(req.params.name, function (err, rs) {
 		if (err) return next(err);
-		res.json(rs)
+		res.json({status: 1, msg: "", data: rs})
 	});
 });
 
@@ -26,7 +25,24 @@ router.post('/user', function(req, res, next) {
 	// res.send('respond a');
 	console.debug(req.body)
 
-	res.json(req.body);
+	res.json({status: 1, msg: "", data: req.body})
+});
+
+router.post('/user/login', function(req, res, next) {
+	// res.send('respond a');
+	console.log(req.body)
+	const user = req.body;
+	const session = req.session;
+	console.log(session);
+	User.loadByName(user.name, function (err, rs) {
+		if (err) return next(err);
+		if(_.isEmpty(rs)) {
+			console.info("[INFO] user doesn't exist!!");
+			res.json({status: 0, msg: "登录失败!"});
+			return;
+		}
+		res.json({status: 1, msg: "登录成功!", data: rs});
+	});
 });
 
 module.exports = router;

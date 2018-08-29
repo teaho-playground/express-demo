@@ -6,6 +6,9 @@ var lessMiddleware = require('less-middleware');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 // var multer = require('multer');
+//session support
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 var autoRoutes = require('express-auto-routes');
 var CORS = require('./middlewares/CORS');
@@ -25,6 +28,21 @@ function dbConnect() {
 global.db = dbConnect()
 	.on('error', console.log)
 	.on('disconnected', dbConnect);
+
+//see https://github.com/expressjs/session/blob/master/README.md
+app.use(session({
+	secret: '123456',
+	name: 'testapp',
+	cookie: {maxAge: 80000 },
+	resave: false,
+	saveUninitialized: true,
+	store: new MongoStore({   //配置mongodb
+		mongooseConnection: global.db,
+		// host: '127.0.0.1',
+		// port: 27017,
+		// db: 'test'
+})
+}));
 
 var indexRouter = require('./routes/index');
 var testRouter = require('./routes/test');
