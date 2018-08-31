@@ -21,10 +21,12 @@ router.get('/user/:name', function (req, res, next) {
 	});
 });
 
-router.post('/user', function(req, res, next) {
-	// res.send('respond a');
-	console.debug(req.body)
+router.get('/user', function(req, res, next) {
+	res.json({status: 1, msg: "", data: req.session.user});
+});
 
+router.post('/user', function(req, res, next) {
+	console.debug(req.body);
 	res.json({status: 1, msg: "", data: req.body})
 });
 
@@ -39,6 +41,7 @@ router.post('/user/login', function(req, res, next) {
 			res.json({status: 0, msg: "登录失败!"});
 			return;
 		}
+		console.log('user: ', rs);
 		req.session.user = rs;
 		req.session.save();
 		res.json({status: 1, msg: "登录成功!", data: rs});
